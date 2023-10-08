@@ -1,10 +1,8 @@
 package kg.test.example.controller;
 
-import kg.test.example.adapter.BookFileFormatAdapter;
 import kg.test.example.model.Book;
 import kg.test.example.service.BookService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,9 +14,6 @@ import java.util.List;
 @AllArgsConstructor
 public class BookController {
     private final BookService bookService;
-    private final BookFileFormatAdapter pdfFileAdapter;
-    private final BookFileFormatAdapter epubFileAdapter;
-
 
     @GetMapping
     public List<Book> getAllBooks() {

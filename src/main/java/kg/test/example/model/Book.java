@@ -4,11 +4,6 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-
 @Entity
 @Data
 public class Book {
@@ -29,9 +24,6 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "author_id",referencedColumnName = "id")
     private Author author;
-
-//    @Lob
-//    private byte[] fileData;
 
 
 }

@@ -70,9 +70,10 @@ public class BookService {
         return null;
     }
 
+    //Адаптер
     public void saveBook(Book book, MultipartFile file1) throws IOException {
         if (file1.getSize() != 0) {
-        // Устанавливаем значение title перед сохранением
+
             book.setTitle("Название вашей книги");
             book.setDescription("Описание вашей книги");
 
