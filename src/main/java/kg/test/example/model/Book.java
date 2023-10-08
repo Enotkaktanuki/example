@@ -1,5 +1,6 @@
 package kg.test.example.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,7 +23,15 @@ public class Book {
     @Column(name = "book_description",columnDefinition = "TEXT")
     private String description;
 
+    @JsonManagedReference
+    //для отмены цикличности. при гетзапросе для получения инфы обо всех
+
     @ManyToOne
     @JoinColumn(name = "author_id",referencedColumnName = "id")
     private Author author;
+
+//    @Lob
+//    private byte[] fileData;
+
+
 }

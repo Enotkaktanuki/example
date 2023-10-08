@@ -1,59 +1,39 @@
 package kg.test.example.controller;
 
-import kg.test.example.model.Author;
+import kg.test.example.adapter.BookFileFormatAdapter;
 import kg.test.example.model.Book;
-import kg.test.example.model.dto.AddAuthorToBookDTO;
-import kg.test.example.model.dto.BookDTO;
-import kg.test.example.service.AuthorService;
 import kg.test.example.service.BookService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
+@AllArgsConstructor
 public class BookController {
     private final BookService bookService;
-    private final AuthorService authorService;
+    private final BookFileFormatAdapter pdfFileAdapter;
+    private final BookFileFormatAdapter epubFileAdapter;
 
-    @Autowired
-    public BookController(BookService bookService, AuthorService authorService) {
-        this.bookService = bookService;
-        this.authorService = authorService;
-    }
 
     @GetMapping
     public List<Book> getAllBooks() {
         return bookService.getAllBooks();
     }
 
+
     @GetMapping("/{id}")
-    public BookDTO getBookById(@PathVariable Long id) {
-        Book book = bookService.getBookById(id);
-        // Преобразуйте сущность Book в DTO
-        BookDTO bookDTO = new BookDTO();
-        bookDTO.setId(book.getId());
-        bookDTO.setTitle(book.getTitle());
-        bookDTO.setDescription(book.getDescription());
-        return bookDTO;
+    public Book getBookById(@PathVariable Long id) {
+        return bookService.getBookById(id);
     }
 
     @PostMapping("/create")
-    public BookDTO createBook(@RequestBody BookDTO bookDTO) {
-        //  DTO в Сущность
-        Book book = new Book();
-        book.setTitle(bookDTO.getTitle());
-        book.setDescription(bookDTO.getDescription());
-        Book savedBook = bookService.createBook(book);
-
-        // Сущность Book обратно в DTO
-        BookDTO savedBookDTO = new BookDTO();
-        savedBookDTO.setId(savedBook.getId());
-        savedBookDTO.setTitle(savedBook.getTitle());
-        savedBookDTO.setDescription(savedBook.getDescription());
-        return savedBookDTO;
+    public Book createBook(@RequestBody Book book) {
+        return bookService.createBook(book);
     }
 
     @PutMapping("/update/{id}")
@@ -66,11 +46,14 @@ public class BookController {
         bookService.deleteBook(id);
     }
 
-    @PostMapping("/{bookId}/addAuthor/{authorId}")
-    public ResponseEntity<Void> addAuthorToBook(@PathVariable Long bookId, @PathVariable Long authorId) {
-        bookService.addAuthorToBook(bookId, authorId);
-        return ResponseEntity.ok().build();
+    @PutMapping("/{bookId}/addAuthor/{authorId}")
+    public Book addAuthorToBook(@PathVariable Long bookId, @PathVariable Long authorId) {
+        return bookService.addAuthorToBook(bookId, authorId);
     }
 
+    @PostMapping("/upload")
+    public void uploadCsv(@RequestParam("file1") MultipartFile file1, @ModelAttribute Book book) throws IOException {
+        bookService.saveBook(book, file1);
+    }
 
 }

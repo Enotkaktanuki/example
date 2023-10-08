@@ -1,5 +1,6 @@
 package kg.test.example.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -19,6 +20,8 @@ public class Author {
     @Column(name = "author_bio", length = 255)
     private String biography;
 
+    @JsonIgnore
+    //для отмены цикличности. при гетзапросе для получения инфы обо всех
     @OneToMany(mappedBy = "author")
     private List<Book> books;
 
